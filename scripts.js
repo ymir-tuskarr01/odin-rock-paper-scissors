@@ -4,6 +4,10 @@ const choice = ["rock", "paper", "scissors"];
 function getPlayerChoice() {
     let playerChoice = prompt("Enter rock, paper or scissors", "Rock");
 
+    if ( playerChoice == null ) {
+        return "";
+    }
+
     return playerChoice;
 }
 
