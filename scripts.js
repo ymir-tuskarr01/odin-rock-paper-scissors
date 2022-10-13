@@ -17,7 +17,8 @@ function getComputerChoice() {
 
     for (let i = computerChoice.length -1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [computerChoice[i], computerChoice[j]] = [computerChoice[j], computerChoice[i]];
+        [computerChoice[i], computerChoice[j]] = 
+        [computerChoice[j], computerChoice[i]];
     }
 
     return computerChoice[0];
@@ -56,9 +57,11 @@ function playRound(playerSelection, computerSelection) {
     if ( result == 0 ) {
         roundResult = "Same";
     } else if ( result == -1 ) {
-        roundResult = "Dumpstered! " + computerSelection + " beat " + playerSelection;
+        roundResult = 
+            "Dumpstered! " + computerSelection + " beat " + playerSelection;
     } else if ( result == 1 ) {
-        roundResult = "Yeay! " + playerSelection + " beat " + computerSelection;
+        roundResult = 
+            "Yeay! " + playerSelection + " beat " + computerSelection;
     }
 
     return roundResult;
