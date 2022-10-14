@@ -1,8 +1,28 @@
-let winCount = 0;
+"use strict"
+// let winCount = 0;
+let playerScore = 0;
+let computerScore = 0;
 const choice = ["rock", "paper", "scissors"];
 
-function getPlayerChoice() {
-    let playerChoice = prompt("Enter rock, paper or scissors", "Rock");
+const buttons = document.querySelectorAll("#divButton button");
+const playerScorePlaceHolder = document.querySelector("#divScore .player");
+const computerScorePlaceHolder = document.querySelector("#divScore .computer");
+const roundResultPlaceHolder = document.querySelector("#divResult .round");
+const gameResultPlaceHolder = document.querySelector("#divResult .game");
+const buttonReset = document.getElementById("divButtonReset");
+
+// 2022/10/14: added for ui style
+for (let button in Array.from(buttons)) {
+    if (typeof button !== "function") {
+        buttons[button].addEventListener("click", startGame);
+    }
+}
+
+// 2022/10/14: function parameter added (event)
+// 2022/10/14: change playerChoice from prompt to select from button
+function getPlayerChoice(event) {
+    // let playerChoice = prompt("Enter rock, paper or scissors", "Rock");
+    let playerChoice = event.target.getAttribute("data-name");
 
     if ( playerChoice == null ) {
         return "";
@@ -87,30 +107,79 @@ function game(n) {
     }
 }
 
-function startGame(){
+// 2022/10/14: function parameter added (event)
+function startGame(event) {
     // change playerSelection and computerSelection to lowercase
-    let playerSelection = getPlayerChoice().toLowerCase();
+    let playerSelection = getPlayerChoice(event).toLowerCase();
     let computerSelection = getComputerChoice().toLowerCase();
 
-    if ( !choice.includes(playerSelection)) {
-        console.log("Please enter either rock, paper of scissors");
-        game(1);
-        return;
-    }
+    // not needed with ui style
+    // if ( !choice.includes(playerSelection)) {
+    //     console.log("Please enter either rock, paper of scissors");
+    //     // game(1);
+    //     return;
+    // }
 
     let playRoundResult = playRound(playerSelection, computerSelection);
     
-    console.log(playRoundResult);
+    // console.log(playRoundResult);
+    roundResultPlaceHolder.textContent = playRoundResult;
 
     let resultLowerCase = playRoundResult.toLowerCase();
 
+    // this logic is not good, better use false/true and counter to keep track
     if ( resultLowerCase != "same" ) {
         if ( resultLowerCase.split("!")[0] == "yeay") {
-            winCount++;
+            // winCount++;
+            playerScore++;
+        } else {
+            computerScore++;
         }
-    } else {
-        game(1);
+    }
+    
+    playerScorePlaceHolder.textContent = playerScore;
+    computerScorePlaceHolder.textContent = computerScore;
+    //not needed with ui style
+    // else {
+    //     // game(1);
+    // }
+    if (playerScore > 4 || computerScore > 4) {
+        endGame();
     }
 }
 
-game(5);
+function endGame() {
+    for (let button in Array.from(buttons)) {
+        if (typeof button !== "function") {
+            buttons[button].removeEventListener("click", startGame);
+        }
+    }
+
+    buttonReset.style.display = "block";
+    buttonReset.addEventListener("click", resetGame);
+
+    if (playerScore > 4) gameResultPlaceHolder.textContent = "You won";
+    if (computerScore > 4) gameResultPlaceHolder.textContent = "You lose";
+
+    return;
+}
+
+function resetGame(event) {
+    event.target.parentNode.style.display = "none";
+    event.target.removeEventListener("click", resetGame);
+
+    playerScore = 0;
+    computerScore = 0;
+
+    playerScorePlaceHolder.textContent = "";
+    computerScorePlaceHolder.textContent = "";
+    roundResultPlaceHolder.textContent = "";
+    gameResultPlaceHolder.textContent = "";
+
+    for (let button in Array.from(buttons)) {
+        if (typeof button !== "function") {
+            buttons[button].addEventListener("click", startGame);
+        }
+    }
+}
+// game(5);
